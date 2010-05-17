@@ -54,6 +54,7 @@ class Config(object):
         self._logfile = None
         self._filters = []
         self._outdir = None
+        self._url = None
         self._verify = None
         with open(filename) as f:
             self.__load(yaml.load(f))
@@ -73,6 +74,10 @@ class Config(object):
     @property
     def output_folder(self):
         return self._outdir
+
+    @property
+    def url(self):
+        return self._url
 
     @property
     def verify(self):
