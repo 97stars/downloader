@@ -1,21 +1,26 @@
+import logging
 import os
 import urllib2
 from tempfile import TemporaryFile
 
-from rss.db import RecordDB
+logger = logging.getLogger("downloader.rss.dl")
 
-
-def fetch(releases, directory):
+def fetch(releases, directory, db):
     for title, url in releases:
-        _save(title, url, directory)
+        if db.exists(title):
+            logger.info("%s has already been downloaded", title)
+        else:
+            _save(title, url, directory)
+            db.add(title)
+            logger.info("%s downloaded", title)
 
-
-def record_airdates(airdates):
-    pass
+def record_airdates(airdates, db):
+    for a in airdates:
+        db.add_airdate(a)
+        logger.info("Airdate %s added", a)
 
 def verify():
     pass
-
 
 def _save(title, url, directory):
     t_url = urllib2.urlopen(url)

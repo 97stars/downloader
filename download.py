@@ -5,7 +5,7 @@ from optparse import OptionParser, make_option
 from rss import dl
 from rss.config import Config
 from rss.db import RecordDB
-from rss.parsers import EZRSS
+from rss.parsers import EZRSS, TVDB
 
 OPTIONS = [
     make_option("-c", "--config", action="store",
@@ -25,16 +25,21 @@ def parse_options():
 
 
 def main(config, options):
+    db = RecordDB(config.database)
     if options.verify:
         print "VERIFY"
     elif options.airdate:
-        print "AIRDATE"
+        airdates = TVDB(config.verify.url).parse()
+        dl.record_airdates([title for title in airdates if
+                         reduce(lambda x, y: x or y,
+                                [f.match(title) for f in config.filters])],
+                        db)
     else:
         releases = EZRSS(config.url).parse()
         dl.fetch([(title, url) for title, url in releases if
                   reduce(lambda x, y: x or y,
                          [f.match(title) for f in config.filters])],
-                 config.output_folder)
+                 config.output_folder, db)
 
 
 def get_logger(filename):

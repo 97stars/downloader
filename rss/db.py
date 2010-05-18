@@ -21,7 +21,7 @@ class RecordDB(object):
 
     def add_airdate(self, show):
         cur = self.conn.cursor()
-        cur.execute("INSERT INTO airdates(show, time) VALUSE(?, ?);",
+        cur.execute("INSERT INTO airdates(show, time) VALUES(?, ?);",
                     (show, time.time()))
         self.conn.commit()
         cur.close()
@@ -50,7 +50,7 @@ class RecordDB(object):
                     and
                     datetime.datetime.fromtimestamp(float(row[1])) <= timeend)]
 
-    def __create():
+    def __create(self):
         cur = self.conn.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS downloaded
 (id INTEGER PRIMARY KEY, title VARCHAR(255), time VARCHAR(32));""")
