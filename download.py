@@ -27,12 +27,13 @@ def parse_options():
 def main(config, options):
     db = RecordDB(config.database)
     if options.verify:
-        print "VERIFY"
+        dl.verify(db, config)
     elif options.airdate:
-        airdates = TVDB(config.verify.url).parse()
-        dl.record_airdates([title for title in airdates if
+        airdates = [(":".join(e[:-1]).strip(), e[-1].strip()) for e in
+                    [x.split(":") for x in TVDB(config.verify.url).parse()]]
+        dl.record_airdates([show for show, _ in airdates if
                          reduce(lambda x, y: x or y,
-                                [f.match(title) for f in config.filters])],
+                                [f.match(show) for f in config.filters])],
                         db)
     else:
         releases = EZRSS(config.url).parse()

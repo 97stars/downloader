@@ -35,14 +35,14 @@ class RecordDB(object):
         else:
             return False
 
-    def fetch_airdates(date):
+    def fetch_airdates(self, date):
         cur = self.conn.cursor()
         cur.execute("SELECT show, time FROM airdates;")
         return [row[0] for row in cur.fetchall()
                 if datetime.datetime.fromtimestamp(float(row[1])).date() ==
                 date]
 
-    def fetch_releases(timestart, timeend):
+    def fetch_releases(self, timestart, timeend):
         cur = self.conn.cursor()
         cur.execute("SELECT title, time FROM downloaded;")
         return [row[0] for row in cur.fetchall()
