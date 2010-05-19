@@ -86,6 +86,7 @@ def _mail(config, aired, downloaded, not_dl, not_air):
     server.quit()
 
 def _save(title, url, directory):
+    title = re.sub(r'\/:*?"<>|', "_", title)
     t_url = urllib2.urlopen(url)
     with TemporaryFile() as temp:
         temp.write(t_url.read())
